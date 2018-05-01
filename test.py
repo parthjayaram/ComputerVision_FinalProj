@@ -11,7 +11,7 @@ import os,sys,cv2,random,datetime,time,math
 import argparse
 import numpy as np
 
-import net_s3fd
+from s3fd import s3fd_original as net_s3fd
 from bbox import *
 
 def detect(net,img):
@@ -21,10 +21,11 @@ def detect(net,img):
 
     img = Variable(torch.from_numpy(img).float(),volatile=True).cuda()
     BB,CC,HH,WW = img.size()
-    olist = net(img)
+    olist, gender_list = net(img)
 
     bboxlist = []
     for i in range(len(olist)/2): olist[i*2] = F.softmax(olist[i*2])
+    for i in range(len(gender_list)): gender_list[i] = F.softmax(gender_list[i])
     for i in range(len(olist)/2):
         ocls,oreg = olist[i*2].data.cpu(),olist[i*2+1].data.cpu()
         FB,FC,FH,FW = ocls.size() # feature map size
