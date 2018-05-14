@@ -105,9 +105,12 @@ class s3fd(nn.Module):
         #m = F.max_pool2d(h, 2, 2)
         #print(h.size())
         m = f7_2.view(1,-1)
+        # print(m.size())
         #print(m)
         op = self.fc_1(m)
-        return F.softmax(op)
+        output =F.softmax(op, dim=1)
+        # print(output.size())
+        return output
 #         f3_3 = self.conv3_3_norm(f3_3)
 #         f4_3 = self.conv4_3_norm(f4_3)
 #         f5_3 = self.conv5_3_norm(f5_3)
